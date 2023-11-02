@@ -35,19 +35,16 @@ int main(void) {
     clock_t inicio, fim;
 
     /*Mensuração de todos os tempos de cada algoritmo de busca*/
-
     
 
     inicio = clock();
     int resultadoLinear = buscaLinear(array, extent, keySearch, &posicoes, &contadorPosicoes);
     fim = clock();
- 
     printf("Tempo de Busca Linear para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
 
     inicio = clock();
     int resultadoSentinela = buscaLinearComSentinela(array, extent, keySearch);
     fim = clock();
-    //printf(" %llu \t", fim - inicio);
     printf("Tempo de Busca Linear com Sentinela para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
 
     inicio = clock();
@@ -55,7 +52,7 @@ int main(void) {
     fim = clock();
     printf("Tempo de Busca Binária para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
     
-    free(array);
+    free(array);        /*Liberação de memóra alocada dinamicamente para o vetor*/
 
 
     system("PAUSE");
@@ -69,7 +66,7 @@ void geraInteracao(int **array, int *extent, int keySearch) {
     printf("Digite o tamanho do vetor que gostarias de implementar:");
     scanf("%d", extent);
 
-    *array = (int *)malloc((*extent) * sizeof(int));
+    *array = (int *)malloc((*extent) * sizeof(int));          /*Alocação dinâmica de memória e sua execução condicional*/
 
     if (*array == NULL) {
         printf("Erro na alocação de memória.\n");
@@ -79,12 +76,12 @@ void geraInteracao(int **array, int *extent, int keySearch) {
     FILE *fp;
     fp = fopen("numerosLidosBusca", "w");
 
-    if (fp == NULL){
+    if (fp == NULL){                    /*Tratamento de erro no caso de uma abertura fracassada de arquivo*/
         printf("Erro na abertura de arquivo.\n");
         exit(1);
     }
     
-        
+    /*Preenchimento do vetor*/
     for (int i = 0; i < *extent; i++) {
         printf("Digite o %dº número inteiro: ", i + 1);
         scanf("%d", &(*array)[i]);
@@ -93,26 +90,31 @@ void geraInteracao(int **array, int *extent, int keySearch) {
     }
     /*Fechamento do arquivo*/
     fclose(fp);
-    printf("\nNúmeros do vetor :\n ");
 
-    recebeKeySearch(*array, *extent, keySearch);
+    recebeKeySearch(*array, *extent, keySearch);    /*Chamada da função para receber a chave de busca*/
 
 }
 
+/*Função para receber a chave de busca*/
 void recebeKeySearch(int *array, int extent, int keySearch){
 
-    int i, contadorPosicoes = 0, *posicoes = NULL;
+    /*Caso o elemento esteja presente no vetor, a função de busca linear foi selecionada como a sentinela para mostrar,
+    pois se um algoritmo já fizer o trabalho de busca do elemento e sua posição, não precisaremos dar trabalho aos outros*/
+    
+    int i, contadorPosicoes = 0, *posicoes = NULL;      /*Definimos o contador de posições (no caso de mais de uma) e um
+                                                        ponteiro para essas posições.*/
 
     printf("Tudo ok! Agora o digite o elemento que desejas buscar:\n");
     scanf("%d", &keySearch);
 
+    /*Chamadas das funções*/
     buscaLinear(array, extent, keySearch, &posicoes, &contadorPosicoes);
     buscaLinearComSentinela(array, extent, keySearch);
     buscaBinaria(array, extent, keySearch);
     
-    if (contadorPosicoes > 0){
+    if (contadorPosicoes > 0){              /*Aqui o caso das execuções condicionais para o encontro da chave de busca*/
         printf("Elemento encontrado na(s) posição(ões):");
-        for (i = 0; i < contadorPosicoes; i++){
+        for (i = 0; i < contadorPosicoes; i++){     /*Caso haja duplicatas de um elemento*/
             printf("%d\t", posicoes[i]);
         }
         printf("\n");
@@ -120,45 +122,50 @@ void recebeKeySearch(int *array, int extent, int keySearch){
     else{
         printf("Elemento não encontrado.\n");
     }
-    free(posicoes);
-    return;
+    free(posicoes);         /*Liberação de memória alocada dinamicamente*/
+    return;                 /*Retorno para o escopo da função principal*/
 }
 
 /*Função de busca sequencial linear simples*/
 int buscaLinear(int *array, int extent, int keySearch, int **posicoes, int *contadorPosicoes) {
+    /*Inicialização do contador de posições como ponteiro e alocação dinâmica para posições*/
     *contadorPosicoes = 0;
     *posicoes = (int *)malloc (extent * sizeof(int));
     
     if (*posicoes == NULL){
         printf("Erro na alocação de memória.\n");
     }
-    for (int i = 0; i < extent; i++) {
+    for (int i = 0; i < extent; i++) {      /*Itera até o final do array e se encontrar a chave de busca, a posiciona no ponteiro posições*/
         if (array[i] == keySearch) {
             (*posicoes)[(*contadorPosicoes)++] = i;
         }
     }
-    return -1;  
+    return -1;  /*Retorna tal valor independente da existência do elemento, haja vista que já sendo tratada sua existência 
+                na função recebeKeySearch*/
     
 }
 
 /*Função de busca sequencial linear com valor sentinela*/
 int buscaLinearComSentinela(int *array, int extent, int keySearch) {
-    int lastElement = array[extent] ;
+    int lastElement = array[extent];        /*Coloca um valor sentinela no final do vetor*/
     array[extent] = keySearch; 
     int i = 0;
-    while (array[i] != keySearch) {
+    while (array[i] != keySearch) {     /*Procura a chave de busca até encontrar*/
         i++;
     }
-    if ((i < extent - 1) || (array[extent - 1] == keySearch)) {
+    if ((i < extent - 1) || (array[extent - 1] == keySearch)) {     /*Se o encontrar, talvez na última posição, retorna sua posição*/
         return i;  
     }
-    return -1;  
+    return -1;      /*Elemento não encontrado*/
 }
 
-
+/*Função de busca binária*/
 int buscaBinaria(int *array, int extent, int keySearch) {
+    /*Presumindo que já haja ordenação*/
     int left = 0;
-    int right = extent - 1;
+    int right = extent - 1;         /*O algoritmo divide o vetor ao meio e compara o elemento do meio com a chave de busca,
+                                    em caso de a chave ser maior ou menor, o algoritmo continua a busca pela direita ou 
+                                    esquerda, respectivamente.*/
     while (left <= right) {
         int half = left + (right - left) / 2;
         if (array[half] == keySearch) {
@@ -170,5 +177,5 @@ int buscaBinaria(int *array, int extent, int keySearch) {
             right = half - 1;
         }
     }
-    return -1;  
+    return -1;      /*Elemento não encontrado*/
 }
