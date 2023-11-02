@@ -6,8 +6,9 @@
 
 /*Protótipos das funções*/
 
-void geraVetor(int **array, int *extent);
-int buscaLinear(int *array, int extent, int keySearch);
+void geraInteracao(int **array, int *extent, int keySearch);
+void recebeKeySearch(int *array, int extent, int keySearch);
+int buscaLinear(int *array, int extent, int keySearch, int **posicoes, int *contadorPosicoes);
 int buscaLinearComSentinela(int *array, int extent, int keySearch);
 int buscaBinaria(int *array, int extent, int keySearch);
 
@@ -15,11 +16,13 @@ int buscaBinaria(int *array, int extent, int keySearch);
 /*Nesta também, está a execução dos cálculos de tempo para cada algoritmo de busca*/
 
 int main(void) {
+    
+    int keySearch = -1; 
     int *array;     /*Tanto aqui como em todo o código, o vetor que irá ser preenchido com as entradas do usuário será um ponteiro.*/
-    int extent;
+    int extent, contadorPosicoes = 0, *posicoes = NULL;
     printf("Bem-vindo ao nosso programa para determinação de complexidade computacional de buscas.\n");
     
-    geraVetor(&array, &extent);
+    geraInteracao(&array, &extent, keySearch);
 
     printf("---------------------------------------------------------------------------------------------------------\n");
     printf("       Comparativos entre as complexidades computacionais dos algoritmos de busca em linguagem C\n");
@@ -28,14 +31,15 @@ int main(void) {
         
     array = (int *)malloc(extent * sizeof(int));        /*Alocação dinâmica de memória*/
 
-    int keySearch = -1; 
+   
     clock_t inicio, fim;
 
     /*Mensuração de todos os tempos de cada algoritmo de busca*/
 
+    
 
     inicio = clock();
-    int resultadoLinear = buscaLinear(array, extent, keySearch);
+    int resultadoLinear = buscaLinear(array, extent, keySearch, &posicoes, &contadorPosicoes);
     fim = clock();
  
     printf("Tempo de Busca Linear para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
@@ -49,15 +53,8 @@ int main(void) {
     inicio = clock();
     int resultadoBinaria = buscaBinaria(array, extent, keySearch);
     fim = clock();
-    printf("Tempo de Busca Binária Com ordenacao para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
+    printf("Tempo de Busca Binária para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
     
-
-    inicio = clock();
-    resultadoBinaria = buscaBinaria(array, extent, keySearch);
-    fim = clock();
-    printf("Tempo de Busca Binária Sem ordenacao para n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
-    printf("-----------------------------------------------------\n");
-
     free(array);
 
 
@@ -67,7 +64,7 @@ int main(void) {
 }
 
 /*Função para preenchimento do vetor a ser tratado. O preenchimento ocorre por meio da interação com o usuário*/
-void geraVetor(int **array, int *extent) {
+void geraInteracao(int **array, int *extent, int keySearch) {
     printf("****************************************\n");
     printf("Digite o tamanho do vetor que gostarias de implementar:");
     scanf("%d", extent);
@@ -80,7 +77,12 @@ void geraVetor(int **array, int *extent) {
     }
     /*Abertura do arquivo que irá receber os números digitados pelo usuário*/
     FILE *fp;
-    fp = fopen("arquivo1.txt", "w");
+    fp = fopen("numerosLidosBusca", "w");
+
+    if (fp == NULL){
+        printf("Erro na abertura de arquivo.\n");
+        exit(1);
+    }
     
         
     for (int i = 0; i < *extent; i++) {
@@ -91,17 +93,52 @@ void geraVetor(int **array, int *extent) {
     }
     /*Fechamento do arquivo*/
     fclose(fp);
+    printf("\nNúmeros do vetor :\n ");
+
+    recebeKeySearch(*array, *extent, keySearch);
 
 }
 
+void recebeKeySearch(int *array, int extent, int keySearch){
+
+    int i, contadorPosicoes = 0, *posicoes = NULL;
+
+    printf("Tudo ok! Agora o digite o elemento que desejas buscar:\n");
+    scanf("%d", &keySearch);
+
+    buscaLinear(array, extent, keySearch, &posicoes, &contadorPosicoes);
+    buscaLinearComSentinela(array, extent, keySearch);
+    buscaBinaria(array, extent, keySearch);
+    
+    if (contadorPosicoes > 0){
+        printf("Elemento encontrado na(s) posição(ões):");
+        for (i = 0; i < contadorPosicoes; i++){
+            printf("%d\t", posicoes[i]);
+        }
+        printf("\n");
+    }
+    else{
+        printf("Elemento não encontrado.\n");
+    }
+    free(posicoes);
+    return;
+}
+
 /*Função de busca sequencial linear simples*/
-int buscaLinear(int *array, int extent, int keySearch) {
+int buscaLinear(int *array, int extent, int keySearch, int **posicoes, int *contadorPosicoes) {
+    *contadorPosicoes = 0;
+    *posicoes = (int *)malloc (extent * sizeof(int));
+    
+    if (*posicoes == NULL){
+        printf("Erro na alocação de memória.\n");
+    }
     for (int i = 0; i < extent; i++) {
         if (array[i] == keySearch) {
-            return i;
+            (*posicoes)[(*contadorPosicoes)++] = i;
         }
     }
     return -1;  
+    
 }
 
 /*Função de busca sequencial linear com valor sentinela*/
@@ -119,8 +156,6 @@ int buscaLinearComSentinela(int *array, int extent, int keySearch) {
 }
 
 
-
-// Função de busca binária sem ordenação
 int buscaBinaria(int *array, int extent, int keySearch) {
     int left = 0;
     int right = extent - 1;

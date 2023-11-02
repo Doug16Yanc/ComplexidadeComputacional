@@ -28,6 +28,10 @@ int main(void) {
     clock_t inicio, fim; /*Variáveis para mensuração de tempo inicial e tempo final*/
 
     /* Mensuração de todos os tempos de cada algoritmo de ordenação */
+
+    File *fp;
+    fopen(fp);
+
     
     /*Realização de medida para cada tipo de algoritmo subsequente*/
     inicio = clock();
