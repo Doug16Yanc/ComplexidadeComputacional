@@ -11,6 +11,7 @@ void recebeKeySearch(int *array, int extent, int keySearch);
 int buscaLinear(int *array, int extent, int keySearch, int **posicoes, int *contadorPosicoes);
 int buscaLinearComSentinela(int *array, int extent, int keySearch);
 int buscaBinaria(int *array, int extent, int keySearch);
+void salvaDados();
 
 /*No escopo da função principal estão a chamada para a função que irá receber as entradas do usuário.*/
 /*Nesta também, está a execução dos cálculos de tempo para cada algoritmo de busca*/
@@ -178,4 +179,13 @@ int buscaBinaria(int *array, int extent, int keySearch) {
         }
     }
     return -1;      /*Elemento não encontrado*/
+}
+void salvaDados(){
+    File *fp;
+    fopen(fp);
+
+    if (fp == NULL){
+        printf("Erro na abertura de arquivo.\n");
+        exit(1);
+    }
 }

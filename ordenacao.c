@@ -12,6 +12,7 @@ int realizaParticao(int *array, int inicio, int fim);
 void quickSort(int *array, int inicio, int fim);
 void realizaMescla(int *array, int inicio, int meio, int fim);
 void mergeSort(int *array, int inicio, int fim);
+void salvaDados();
 
 /*Escopo da função principal*/
 int main(void) {
@@ -259,5 +260,15 @@ void mergeSort(int *array, int inicio, int fim) {
         mergeSort(array, inicio, meio);
         mergeSort(array, meio + 1, fim);
         realizaMescla(array, inicio, meio, fim);
+    }
+}
+
+void salvaDados(){
+    File *fp;
+    fopen(fp);
+
+    if (fp == NULL){
+        printf("Erro na abertura de arquivo.\n");
+        exit(1);
     }
 }
