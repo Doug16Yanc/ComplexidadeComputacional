@@ -1,100 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
+#include "algoritmos.h"
 
-/* Protótipos das funções */
-void geraInteracao(int **array, int *extent);
-void insertionSort(int *array, int extent);
-void selectionSort(int *array, int extent);
-void bubbleSort(int *array, int extent);
-int realizaParticao(int *array, int inicio, int fim);
-void quickSort(int *array, int inicio, int fim);
-void realizaMescla(int *array, int inicio, int meio, int fim);
-void mergeSort(int *array, int inicio, int fim);
-void salvaDados();
-
-/*Escopo da função principal*/
-int main(void) {
-    int *array, extent;
-
-    printf("Bem-vindo(a) ao nosso programa para determinação de complexidade computacional dos algoritmos de ordenação.\n");
-
-    geraInteracao(&array, &extent);  /*Chamada da função de interação primária com o usuário*/
-
-    printf("****************************************************************************************************************************************\n");
-    printf("       Comparativos entre as complexidades computacionais dos algoritmos de ordenação (classificação) em linguagem C\n");
-    printf("****************************************************************************************************************************************\n");
-
-    clock_t inicio, fim; /*Variáveis para mensuração de tempo inicial e tempo final*/
-
-    /* Mensuração de todos os tempos de cada algoritmo de ordenação */
-
-    File *fp;
-    fopen(fp);
-
-    
-    /*Realização de medida para cada tipo de algoritmo subsequente*/
-    inicio = clock();
-    insertionSort(array, extent);
-    fim = clock();
-    printf("Tempo de classificação para Insertion Sort com n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
-
-    inicio = clock();
-    selectionSort(array, extent);
-    fim = clock();
-    printf("Tempo de classificação para Selection Sort com n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
-
-    inicio = clock();
-    bubbleSort(array, extent);
-    fim = clock();
-    printf("Tempo de classificação para Bubble Sort com n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
-
-    inicio = clock();
-    quickSort(array, 0, extent - 1);
-    fim = clock();
-    printf("Tempo de classificação para Quick Sort com n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
-
-    inicio = clock();
-    mergeSort(array, 0, extent - 1);
-    fim = clock();
-    printf("Tempo de classificação para Merge Sort com n=%d: %d ticks de clock - Tempo tomado: %f\n", extent, (int)(fim - inicio), (double)((fim - inicio) / CLOCKS_PER_SEC));
-            
-    free(array);  /*Liberação de memória do vetor que estava alocado dinamicamente no escopo da função geraInteracao*/
-
-    return 0;
-}
-
-/*Função de interação primária com o usuário*/
-void geraInteracao(int **array, int *extent) {
-    printf("****************************************\n");
-    printf("Digite o tamanho do vetor que gostarias de implementar:");
-    scanf("%d", extent);        /*O extent refere-se ao tamanho do vetor e é passado como parâmetro em quase todas as funções*/
-
-    *array = (int *)malloc((*extent) * sizeof(int));        /*Alocação dinâmica de memória para o vetor*/
-
-    if (*array == NULL) {                                   /*Caso não haja espaço disponível na memória*/
-        printf("Erro na alocação de memória.\n");
-        exit(1);
-    }
-    
-    /* Abertura do arquivo que irá receber os números digitados pelo usuário */
-    FILE *fp;
-    fp = fopen("numerosLidos.txt", "w");
-
-    if (fp == NULL){                /*Tratamento de erro caso o arquivo não abra*/
-        printf("Erro ao abrir o arquivo.\n");
-        exit(1);
-    }
-    for (int i = 0; i < *extent; i++) {
-        printf("Digite o %dº número inteiro: ", i + 1);
-        scanf("%d", &(*array)[i]);                  /*Preenchimento do vetor pelo usuário*/
-        fprintf(fp, "%d\n", (*array)[i]);       
-    }
-    
-    /* Fechamento do arquivo */
-    fclose(fp);
-}
 
 /*Função de classificação por inserção */
 void insertionSort(int *array, int extent) {
@@ -233,7 +138,8 @@ void realizaMescla(int *array, int inicio, int meio, int fim) {
                 if (pont2 > fim) {
                     fim2 = 1;
                 }
-            } else {                    /*As variáveis fim1 e fim2 são utilizadas para averiguar se uma das metades não chegou ao fim*/
+            } 
+            else {                    /*As variáveis fim1 e fim2 são utilizadas para averiguar se uma das metades não chegou ao fim*/
                 if (!fim1) {
                     temporario[i] = array[pont1++];
                 } else {
@@ -260,15 +166,5 @@ void mergeSort(int *array, int inicio, int fim) {
         mergeSort(array, inicio, meio);
         mergeSort(array, meio + 1, fim);
         realizaMescla(array, inicio, meio, fim);
-    }
-}
-
-void salvaDados(){
-    File *fp;
-    fopen(fp);
-
-    if (fp == NULL){
-        printf("Erro na abertura de arquivo.\n");
-        exit(1);
     }
 }
