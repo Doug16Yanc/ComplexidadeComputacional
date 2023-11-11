@@ -33,7 +33,7 @@ int* geraVetorAleatorio1(int extent) {
     return array; 
 }
 
-
+/*Função para ler os elementos gerados no arquivo*/
 void lerElementosDoArquivo1(const char *fp, int **array, int *extent) {
 
     FILE *file = fopen(fp, "r");
@@ -56,7 +56,7 @@ void lerElementosDoArquivo1(const char *fp, int **array, int *extent) {
         exit(EXIT_FAILURE);
     }
 
-    // Volta ao início do arquivo
+    /*Volta ao início do arquivo*/
     fseek(file, 0, SEEK_SET);
 
     for (int i = 0; i < size; i++) {
