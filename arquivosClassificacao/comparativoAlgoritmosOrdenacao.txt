@@ -1,5 +1,0 @@
-Tempo de classificação para Insertion Sort com n=10: 1 ticks de clock - Tempo tomado: 0.000000
-Tempo de classificação para Selection Sort com n=10: 1 ticks de clock - Tempo tomado: 0.000000
-Tempo de classificação para Bubble Sort com n=10: 1 ticks de clock - Tempo tomado: 0.000000
-Tempo de classificação para Quick Sort com n=10: 1 ticks de clock - Tempo tomado: 0.000000
-Tempo de classificação para Merge Sort com n=10: 2 ticks de clock - Tempo tomado: 0.000000

@@ -7,20 +7,20 @@
 #include <time.h>
 #include <x86intrin.h>
 
-
-void geraInteracao(int **array, int *extent, int keySearch);
-void mostraResultados();
-void geraBusca(int **array, int *extent, int keySearch, const char *fileName);
-void geraOrdenacao(int **array, int *extent, int keySearch, const char *fileName);
-void salvaDados(const int *data, int size, const char *fileName);
+int *geraVetorAleatorio1(int extent);
+int* geraVetorAleatorio2(int extent);
 
 /*Protótipos de funções para busca*/
 void recebeKeySearch(int *array, int extent, int keySearch);
+void lerElementosDoArquivo1(const char *fp, int **array, int *extent);
+void geraResultadosBusca(int *array, int extent, int keySearch);
 int buscaLinear(int *array, int extent, int keySearch, int **posicoes, int *contadorPosicoes);
 int buscaLinearComSentinela(int *array, int extent, int keySearch);
 int buscaBinaria(int *array, int extent, int keySearch);
 
 /*Protótipos de funções para classificação/ordenação*/
+void geraResultadosOrdenacao(int *array, int extent);
+void lerElementosDoArquivo2(const char *fp, int **array, int *extent);
 void insertionSort(int *array, int extent);
 void selectionSort(int *array, int extent);
 void bubbleSort(int *array, int extent);

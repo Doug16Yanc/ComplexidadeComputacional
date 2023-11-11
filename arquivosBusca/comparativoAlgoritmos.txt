@@ -1,3 +1,0 @@
-Tempo de Busca Linear para n=10: 1 ticks de clock - Tempo tomado: 0.000000
-Tempo de Busca Linear com Sentinela para n=10: 0 ticks de clock - Tempo tomado: 0.000000
-Tempo de Busca Binária para n=10: 0 ticks de clock - Tempo tomado: 0.000000
